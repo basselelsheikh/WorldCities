@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "WorldCities", "WorldCities\WorldCities.esproj", "{2A467096-D3E9-47F4-A191-9FFA4C330397}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldCitiesAPI", "WorldCitiesAPI\WorldCitiesAPI.csproj", "{FD515B23-DCCD-42EA-9503-894AEC338625}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A467096-D3E9-47F4-A191-9FFA4C330397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A467096-D3E9-47F4-A191-9FFA4C330397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A467096-D3E9-47F4-A191-9FFA4C330397}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2A467096-D3E9-47F4-A191-9FFA4C330397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A467096-D3E9-47F4-A191-9FFA4C330397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A467096-D3E9-47F4-A191-9FFA4C330397}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FD515B23-DCCD-42EA-9503-894AEC338625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD515B23-DCCD-42EA-9503-894AEC338625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD515B23-DCCD-42EA-9503-894AEC338625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD515B23-DCCD-42EA-9503-894AEC338625}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED9D7D3F-85F8-4430-9967-9912678EA523}
+	EndGlobalSection
+EndGlobal
