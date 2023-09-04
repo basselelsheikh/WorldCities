@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorldCitiesAPI.Data;
 using WorldCitiesAPI.Data.Models;
@@ -22,24 +17,36 @@ namespace WorldCitiesAPI.Controllers
         }
 
         // GET: api/Cities
+        // GET: api/Cities/?pageIndex=0&pageSize=10
+        // GET: api/Cities/?pageIndex=0&pageSize=10&sortColumn=name&
+        //  sortOrder=asc
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<ActionResult<ApiResult<City>>> GetCities(
+        int pageIndex = 0,
+        int pageSize = 10,
+        string? sortColumn = null,
+        string? sortOrder = null,
+        string? filterColumn = null,
+        string? filterQuery = null)
         {
-          if (_context.Cities == null)
-          {
-              return NotFound();
-          }
-            return await _context.Cities.ToListAsync();
+            return await ApiResult<City>.CreateAsync(
+                    _context.Cities.AsNoTracking(),
+                    pageIndex,
+                    pageSize,
+                    sortColumn,
+                    sortOrder,
+                    filterColumn,
+                    filterQuery);
         }
 
         // GET: api/Cities/5
         [HttpGet("{id}")]
         public async Task<ActionResult<City>> GetCity(int id)
         {
-          if (_context.Cities == null)
-          {
-              return NotFound();
-          }
+            if (_context.Cities == null)
+            {
+                return NotFound();
+            }
             var city = await _context.Cities.FindAsync(id);
 
             if (city == null)
@@ -86,10 +93,10 @@ namespace WorldCitiesAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<City>> PostCity(City city)
         {
-          if (_context.Cities == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Cities'  is null.");
-          }
+            if (_context.Cities == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Cities'  is null.");
+            }
             _context.Cities.Add(city);
             await _context.SaveChangesAsync();
 

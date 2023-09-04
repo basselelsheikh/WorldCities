@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WorldCitiesAPI.Data;
 using WorldCitiesAPI.Data.Models;
@@ -23,31 +18,22 @@ namespace WorldCitiesAPI.Controllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Country>>> GetCountries()
+        public async Task<ActionResult<ApiResult<Country>>> GetCountries(
+        int pageIndex = 0,
+        int pageSize = 10,
+        string? sortColumn = null,
+        string? sortOrder = null,
+        string? filterColumn = null,
+        string? filterQuery = null)
         {
-          if (_context.Countries == null)
-          {
-              return NotFound();
-          }
-            return await _context.Countries.ToListAsync();
-        }
-
-        // GET: api/Countries/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Country>> GetCountry(int id)
-        {
-          if (_context.Countries == null)
-          {
-              return NotFound();
-          }
-            var country = await _context.Countries.FindAsync(id);
-
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return country;
+            return await ApiResult<Country>.CreateAsync(
+                    _context.Countries.AsNoTracking(),
+                    pageIndex,
+                    pageSize,
+                    sortColumn,
+                    sortOrder,
+                    filterColumn,
+                    filterQuery);
         }
 
         // PUT: api/Countries/5
@@ -86,10 +72,10 @@ namespace WorldCitiesAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Country>> PostCountry(Country country)
         {
-          if (_context.Countries == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Countries'  is null.");
-          }
+            if (_context.Countries == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Countries'  is null.");
+            }
             _context.Countries.Add(country);
             await _context.SaveChangesAsync();
 
