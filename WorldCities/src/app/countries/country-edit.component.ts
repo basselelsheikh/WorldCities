@@ -6,16 +6,16 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { Country } from './country';
+import { BaseFormComponent } from '../base-form.component';
 @Component({
   selector: 'app-country-edit',
   templateUrl: './country-edit.component.html',
   styleUrls: ['./country-edit.component.scss']
 })
-export class CountryEditComponent implements OnInit {
+export class CountryEditComponent extends BaseFormComponent implements OnInit {
   // the view title
   title?: string;
   // the form model
-  form!: FormGroup;
   // the country object to edit or create
   country?: Country;
   // the country object id, as fetched from the active route:
@@ -29,6 +29,7 @@ export class CountryEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private http: HttpClient) {
+    super();
   }
   ngOnInit() {
     this.form = this.fb.group({
