@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Country } from './country';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 @Component({
   selector: 'app-countries',
   templateUrl: './countries.component.html',
@@ -21,6 +22,8 @@ export class CountriesComponent implements OnInit {
   filterQuery?: string;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  filterTextChanged: Subject<string> = new Subject<string>();
+
   constructor(private http: HttpClient) {
   }
   ngOnInit() {
@@ -56,5 +59,17 @@ export class CountriesComponent implements OnInit {
         this.paginator.pageSize = result.pageSize;
         this.countries = new MatTableDataSource<Country>(result.data);
       }, error => console.error(error));
+  }
+
+  // debounce filter text changes
+  onFilterTextChanged(filterText: string) {
+    if (this.filterTextChanged.observers.length === 0) {
+      this.filterTextChanged
+        .pipe(debounceTime(1000), distinctUntilChanged())
+        .subscribe(query => {
+          this.loadData(query);
+        });
+    }
+    this.filterTextChanged.next(filterText);
   }
 }

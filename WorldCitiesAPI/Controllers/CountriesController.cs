@@ -35,6 +35,23 @@ namespace WorldCitiesAPI.Controllers
                     filterColumn,
                     filterQuery);
         }
+        // GET: api/Countries/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Country>> GetCountry(int id)
+        {
+            if (_context.Countries == null)
+            {
+                return NotFound();
+            }
+            var country = await _context.Countries.FindAsync(id);
+
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            return country;
+        }
 
         // PUT: api/Countries/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -100,6 +117,28 @@ namespace WorldCitiesAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        [HttpPost]
+        [Route("IsDupeField")]
+        public bool IsDupeField(
+    int countryId,
+    string fieldName,
+    string fieldValue)
+        {
+            switch (fieldName)
+            {
+                case "name":
+                    return _context.Countries.Any(
+                        c => c.Name == fieldValue && c.Id != countryId);
+                case "iso2":
+                    return _context.Countries.Any(
+                        c => c.ISO2 == fieldValue && c.Id != countryId);
+                case "iso3":
+                    return _context.Countries.Any(
+                        c => c.ISO3 == fieldValue && c.Id != countryId);
+                default:
+                    return false;
+            }
         }
 
         private bool CountryExists(int id)
