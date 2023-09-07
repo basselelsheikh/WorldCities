@@ -24,6 +24,8 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   id?: number;
   // the countries array for the select
   countries?: Country[];
+  // Activity Log (for debugging purposes)
+  activityLog: string = '';
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -44,6 +46,32 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       countryId: new FormControl('', Validators.required)
     }, null, this.isDupeCity());
     this.loadData();
+    // react to form changes
+    this.form.valueChanges
+      .subscribe(() => {
+        if (!this.form.dirty) {
+          this.log("Form Model has been loaded.");
+        }
+        else {
+          this.log("Form was updated by the user.");
+        }
+      });
+      //
+    // react to changes in the form.name control
+    this.form.get("name")!.valueChanges
+      .subscribe(() => {
+        if (!this.form.dirty) {
+          this.log("Name has been loaded with initial values.");
+        }
+        else {
+          this.log("Name was updated by the user.");
+        }
+      });
+  }
+  log(str: string) {
+    this.activityLog += "["
+      + new Date().toLocaleString()
+      + "] " + str + "<br />";
   }
   loadData() {
     // load countries

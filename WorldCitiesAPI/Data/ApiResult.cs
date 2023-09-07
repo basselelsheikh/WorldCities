@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 using System.Reflection;
 namespace WorldCitiesAPI.Data
@@ -87,6 +88,10 @@ namespace WorldCitiesAPI.Data
             source = source
                 .Skip(pageIndex * pageSize)
                 .Take(pageSize);
+            // retrieve the SQL query (for debug purposes)
+#if DEBUG
+            var sql = source.ToParametrizedSql();
+#endif
             var data = await source.ToListAsync();
 
             return new ApiResult<T>(
