@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, AsyncValidatorFn, AbstractControl } from '@angular/forms';
 import { environment } from './../../environments/environment';
 import { City } from '../cities/city';
 import { Country } from './../countries/country';
-import { Observable, map } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { BaseFormComponent } from '../base-form.component';
 import { CityService } from './city.service';
 @Component({
@@ -12,7 +12,7 @@ import { CityService } from './city.service';
   templateUrl: './city-edit.component.html',
   styleUrls: ['./city-edit.component.scss']
 })
-export class CityEditComponent extends BaseFormComponent implements OnInit {
+export class CityEditComponent extends BaseFormComponent implements OnInit, OnDestroy {
   // the view title
   title?: string;
   // the form model
@@ -25,7 +25,8 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   // the countries array for the select
   countries?: Country[];
   // Activity Log (for debugging purposes)
-  activityLog: string = '';
+  private subscriptions: Subscription = new Subscription();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -46,19 +47,19 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       countryId: new FormControl('', Validators.required)
     }, null, this.isDupeCity());
     this.loadData();
+
     // react to form changes
-    this.form.valueChanges
-      .subscribe(() => {
+    this.subscriptions.add(this.form.valueChanges
+      .subscribe(val => {
         if (!this.form.dirty) {
           this.log("Form Model has been loaded.");
         }
         else {
           this.log("Form was updated by the user.");
         }
-      });
-      //
+      }));
     // react to changes in the form.name control
-    this.form.get("name")!.valueChanges
+    this.subscriptions.add(this.form.get("name")!.valueChanges
       .subscribe(() => {
         if (!this.form.dirty) {
           this.log("Name has been loaded with initial values.");
@@ -66,12 +67,15 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
         else {
           this.log("Name was updated by the user.");
         }
-      });
+      }));
+  }
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
   log(str: string) {
-    this.activityLog += "["
+    console.log("["
       + new Date().toLocaleString()
-      + "] " + str + "<br />";
+      + "] " + str);
   }
   loadData() {
     // load countries
